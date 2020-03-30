@@ -30,6 +30,11 @@ class PaymentQueue {
         process.env.RABBITMQ_PAYMENT_QUEUE,
         Buffer.from(JSON.stringify(OrderParserPaymentContract(this.order)))
       );
+      console.log(
+        `[x] sent message: ${JSON.stringify(
+          OrderParserPaymentContract(this.order)
+        )}`
+      );
     } catch (e) {
       /**
        * @todo

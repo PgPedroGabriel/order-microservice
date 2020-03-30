@@ -20,7 +20,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY3MWNkOGU0LWRhNmUt
       },
       {
         "ticket_id": "44b207c0-95e9-4782-827a-7d3917616089",
-        "ticket_qty": 1
+        "ticket_qty": 3
       }
     ]
   }

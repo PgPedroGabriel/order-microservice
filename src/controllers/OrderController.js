@@ -69,7 +69,7 @@ class OrderController {
         },
         { transaction }
       );
-      console.log('created order');
+
       for (const externalEventData of externalEventsData) {
         const orderEvent = await OrderEvent.createFromExternalData(
           order,
@@ -85,7 +85,6 @@ class OrderController {
             ticketQuantityMap[externalTicketData.id],
             transaction
           );
-          console.log('created ticket');
 
           AvailabletyCheck(orderTicket, externalTicketData);
 
