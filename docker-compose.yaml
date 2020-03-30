@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+    orders-microservice:
+      build: .
+      container_name: orders-microservice
+      entrypoint: ["/bin/sh", "./entrypoint.sh"]
+      volumes:
+        - .:/usr/app/
+        - /usr/app/node_modules
+      environment:
+        - PORT=3002
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=docker
+        - DB_DATABASE=orders-microservice
+        - DB_HOST=postgress-orders-microservice
+        - DB_DIALECT=postgres
+        - DB_PORT=5432
+      ports:
+        - "3002:3002"
+      depends_on:
+        - postgress-orders-microservice
+      networks:
+        - orders-microservice-network
+
+
+    postgress-orders-microservice:
+      image: postgres:10.4
+      container_name: postgress-orders-microservice
+      restart: always
+      tty: true
+      ports:
+        - "5434:5432"
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_DB=orders-microservice
+        - POSTGRES_PASSWORD=docker
+      networks:
+        - orders-microservice-network
+
+networks:
+  orders-microservice-network:
+    driver: bridge
