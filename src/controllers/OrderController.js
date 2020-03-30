@@ -6,6 +6,8 @@ import OrderEvent from '../models/OrderEvent';
 import OrderTicket from '../models/OrderTicket';
 import AvailabletyCheck from '../helpers/AvailabletyCheck';
 import TicketQuantityObjectMapper from '../helpers/TicketQuantityObjectMapper';
+import PaymentQueue from '../services/payment/PaymentQueue';
+import OrdersRepository from '../repositories/Orders';
 
 class OrderController {
   /**
@@ -67,7 +69,7 @@ class OrderController {
         },
         { transaction }
       );
-
+      console.log('created order');
       for (const externalEventData of externalEventsData) {
         const orderEvent = await OrderEvent.createFromExternalData(
           order,
@@ -83,16 +85,29 @@ class OrderController {
             ticketQuantityMap[externalTicketData.id],
             transaction
           );
+          console.log('created ticket');
 
           AvailabletyCheck(orderTicket, externalTicketData);
+
+          order.calcTaxes(orderEvent, orderTicket);
         }
       }
-
-      order.calcTaxes();
+      await order.save({ transaction });
 
       await transaction.commit();
 
-      return res.json(order.id);
+      const orderFullData = await OrdersRepository.findOneFullData(order.id);
+
+      /**
+       * Sending to RabbitMQ the Order
+       * to process payment
+       */
+      const queue = new PaymentQueue(orderFullData);
+      await queue.connectQueue();
+      await queue.sendMessage();
+      await queue.closeConnection();
+
+      return res.json(orderFullData);
     } catch (e) {
       /**
        * @todo

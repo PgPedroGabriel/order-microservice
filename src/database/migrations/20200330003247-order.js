@@ -20,6 +20,14 @@ module.exports = {
       external_user_id: {
         type: Sequelize.STRING
       },
+      payment_status: {
+        type: Sequelize.STRING,
+        defaultValue: 'PENDING'
+      },
+      payment_gateway: {
+        type: Sequelize.STRING,
+        defaultValue: 'Mercado Pago'
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false

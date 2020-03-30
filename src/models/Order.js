@@ -30,10 +30,12 @@ class Order extends Model {
           type: Sequelize.STRING
         },
         payment_status: {
-          type: Sequelize.STRING
+          type: Sequelize.STRING,
+          defaultValue: 'PENDING'
         },
         payment_gateway: {
-          type: Sequelize.STRING
+          type: Sequelize.STRING,
+          defaultValue: 'Mercado Pago'
         }
       },
       {
@@ -48,45 +50,14 @@ class Order extends Model {
     return this;
   }
 
-  async calcTaxes(save = true) {
+  async calcTaxes(orderEvent, orderTicket) {
     // Calculate all prices
-
-    const orderEvents = await OrderEvent.findAll({
-      where: {
-        order_id: this.id
-      },
-      attributes: ['id', 'convenience_tax'],
-      include: [
-        {
-          model: OrderTicket,
-          as: 'order_tickets',
-          attributes: ['id', 'total_price']
-        }
-      ]
-    });
-
-    this.tickets_price = 0;
-    this.convenience_price = 0;
-    this.total_price = 0;
-
-    for (const orderEvent of orderEvents) {
-      for (const orderTicket of orderEvent.order_tickets) {
-        const convenience =
-          (orderTicket.total_price * orderEvent.convenience_tax) / 100;
-        this.tickets_price += orderTicket.total_price;
-        this.convenience_price += convenience;
-        this.total_price += orderTicket.total_price + convenience;
-      }
-    }
-
-    console.log(
-      save,
-      this.tickets_price,
-      this.convenience_price,
-      this.total_price
-    );
-
-    if (save) this.save();
+    const convenience =
+      (orderTicket.total_price * orderEvent.convenience_tax) / 100;
+    this.tickets_price += orderTicket.total_price;
+    this.convenience_price += convenience;
+    this.total_price += orderTicket.total_price + convenience;
+    console.log('calculated');
   }
 
   static associete(models) {
