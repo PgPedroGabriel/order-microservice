@@ -1,6 +1,11 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
+import Database from '../database/index';
 import Order from '../models/Order';
 import OrderEvent from '../models/OrderEvent';
 import OrderTicket from '../models/OrderTicket';
+import AvailabletyCheck from '../helpers/AvailabletyCheck';
+import TicketQuantityObjectMapper from '../helpers/TicketQuantityObjectMapper';
 
 class OrderController {
   /**
@@ -25,7 +30,14 @@ class OrderController {
         {
           model: OrderTicket,
           as: 'order_tickets',
-          attributes: ['id', 'name', 'price', 'external_id']
+          attributes: [
+            'id',
+            'name',
+            'unit_price',
+            'total_price',
+            'quantity',
+            'external_id'
+          ]
         },
         {
           model: OrderEvent,
@@ -42,9 +54,55 @@ class OrderController {
    * Create Order
    */
   static async create(req, res) {
-    console.log(req.body);
+    const { externalEventsData } = req;
+    const { body } = req;
 
-    return res.json({});
+    const transaction = await Database.createTranscation();
+    const ticketQuantityMap = TicketQuantityObjectMapper(body);
+
+    try {
+      const order = await Order.create(
+        {
+          external_user_id: req.authUserInfo.id
+        },
+        { transaction }
+      );
+
+      for (const externalEventData of externalEventsData) {
+        const orderEvent = await OrderEvent.createFromExternalData(
+          order,
+          externalEventData,
+          transaction
+        );
+
+        for (const externalTicketData of externalEventData.tickets) {
+          const orderTicket = await OrderTicket.createFromExternalData(
+            order,
+            orderEvent,
+            externalTicketData,
+            ticketQuantityMap[externalTicketData.id],
+            transaction
+          );
+
+          AvailabletyCheck(orderTicket, externalTicketData);
+        }
+      }
+
+      order.calcTaxes();
+
+      await transaction.commit();
+
+      return res.json(order.id);
+    } catch (e) {
+      /**
+       * @todo
+       * Send a alert with error
+       */
+      console.error(e);
+
+      transaction.rollback();
+      return res.status(400).json(e.message);
+    }
   }
 }
 

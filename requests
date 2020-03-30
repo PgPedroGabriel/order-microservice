@@ -8,38 +8,22 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY3MWNkOGU0LWRhNmUt
 # @name createOrder
 POST {{baseUrl}} HTTP/1.1
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY3MWNkOGU0LWRhNmUtNGI1Mi1iN2QzLTQzZjc1YjEwODcxZSIsInVzZXJuYW1lIjoiZGV2cGVkcm9nYWJyaWVsQGdtYWlsLmNvbSIsIm5hbWUiOiJQZWRybyBHYWJyaWVsIiwiZW1haWwiOiJkZXZwZWRyb2dhYnJpZWxAZ21haWwuY29tIiwiaWF0IjoxNTg1NTMwMDY1LCJleHAiOjE1ODYxMzQ4NjV9.gqbPESCOp5QEFWz_VTvSgpmwqmBg_rSqMjHbPBpyVxA
 
-{
-  "email": "devpedrogabriel@gmail.com",
-  "name": "Pedro Gabriel",
-  "password": "123123123",
-  "passwordConfirm": "123123123",
-  "username": "x@gmail.com"
-}
-
-###
-
-@emaiConfirmationToken = {{createUser.response.body.$.email_confirmation_token}}
-
-# @name emailConfirmation
-PUT {{baseUrl}}/auth/verify-email/{{emaiConfirmationToken}} HTTP/1.1
-
-
-###
-
-# @name userAuth
-POST {{baseUrl}}/auth HTTP/1.1
-content-type: application/json
-
-{
-  "username": "x@gmail.com",
-  "password": "123123123"
-}
+[
+  {
+    "event_id": "e37d3ef0-cf9d-494c-8341-db1b4dd8adb4",
+    "tickets": [
+      {
+        "ticket_id": "a00084ad-abe9-49a2-a612-3454d6b383c9",
+        "ticket_qty": 1
+      },
+      {
+        "ticket_id": "44b207c0-95e9-4782-827a-7d3917616089",
+        "ticket_qty": 1
+      }
+    ]
+  }
+]
 
 ###
-
-@token = {{userAuth.response.body.$.token}}
-
-# @name checkToken
-GET {{baseUrl}}/auth/check-token HTTP/1.1
-Authorization: {{token}}

@@ -19,6 +19,10 @@ class Database {
       .map(model => model.associete && model.associete(this.connection.models))
       .map(model => this.connection.sync(model));
   }
+
+  async createTranscation() {
+    return this.connection.transaction({ autocommit: false });
+  }
 }
 
 export default new Database();

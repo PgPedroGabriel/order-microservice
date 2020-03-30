@@ -34,6 +34,21 @@ class OrderEvent extends Model {
     return this;
   }
 
+  static createFromExternalData(order, externalData, transaction) {
+    console.log(`ordeid ${order.id}`);
+    return this.create(
+      {
+        order_id: order.id,
+        name: externalData.name,
+        convenience_tax: externalData.convenience_tax,
+        external_id: externalData.id
+      },
+      {
+        transaction
+      }
+    );
+  }
+
   static associete(models) {
     this.hasMany(models.OrderTicket, { as: 'order_tickets' });
     this.belongsTo(models.Order, { foreignKey: 'order_id', as: 'order' });

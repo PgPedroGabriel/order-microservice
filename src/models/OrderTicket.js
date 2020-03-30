@@ -13,9 +13,15 @@ class OrderTicket extends Model {
         name: {
           type: Sequelize.STRING
         },
-        price: {
+        unit_price: {
           type: Sequelize.DOUBLE,
           defaultValue: 0
+        },
+        quantity: {
+          type: Sequelize.INTEGER
+        },
+        total_price: {
+          type: Sequelize.DOUBLE
         },
         external_id: {
           type: Sequelize.STRING
@@ -26,9 +32,14 @@ class OrderTicket extends Model {
       }
     );
 
-    this.addHook('beforeCreate', event => {
+    this.addHook('beforeCreate', ticket => {
       // eslint-disable-next-line no-param-reassign
-      event.id = uuidv4();
+      ticket.id = uuidv4();
+    });
+
+    this.addHook('beforeSave', ticket => {
+      // eslint-disable-next-line no-param-reassign
+      ticket.total_price = ticket.quantity * ticket.unit_price;
     });
 
     return this;
@@ -40,6 +51,28 @@ class OrderTicket extends Model {
       as: 'order_event'
     });
     this.belongsTo(models.Order, { foreignKey: 'order_id', as: 'order' });
+  }
+
+  static createFromExternalData(
+    order,
+    orderEvent,
+    externalData,
+    quantity,
+    transaction
+  ) {
+    return this.create(
+      {
+        external_id: externalData.id,
+        unit_price: externalData.price,
+        name: externalData.name,
+        quantity,
+        order_id: order.id,
+        order_event_id: orderEvent.id
+      },
+      {
+        transaction
+      }
+    );
   }
 }
 

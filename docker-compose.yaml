@@ -17,6 +17,7 @@ services:
         - DB_DIALECT=postgres
         - DB_PORT=5432
         - CHECK_AUTH_TOKEN_URL=http://auth-microservice:3000/auth/check-token
+        - GET_EVENTS_TICKETS_INFO_URL=http://events-microservice:3001/filter-events-tickets
       ports:
         - "3002:3002"
       depends_on:

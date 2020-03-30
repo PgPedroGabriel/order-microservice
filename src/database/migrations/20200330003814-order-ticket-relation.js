@@ -10,6 +10,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.removeColumn('order_events', 'order_id');
+    return queryInterface.removeColumn('order_tickets', 'order_id');
   }
 };

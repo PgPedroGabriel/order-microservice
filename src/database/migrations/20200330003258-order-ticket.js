@@ -8,9 +8,16 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      price: {
+      total_price: {
         type: Sequelize.DOUBLE,
         defaultValue: 0
+      },
+      unit_price: {
+        type: Sequelize.DOUBLE,
+        defaultValue: 0
+      },
+      quantity: {
+        type: Sequelize.INTEGER
       },
       external_id: {
         type: Sequelize.STRING
