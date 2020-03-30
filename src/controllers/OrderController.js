@@ -37,6 +37,15 @@ class OrderController {
 
     return res.json(orders);
   }
+
+  /**
+   * Create Order
+   */
+  static async create(req, res) {
+    console.log(req.body);
+
+    return res.json({});
+  }
 }
 
 export default OrderController;

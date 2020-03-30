@@ -1,12 +1,11 @@
-GET http://localhost:3001 HTTP/1.1
+GET http://localhost:3002 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY3MWNkOGU0LWRhNmUtNGI1Mi1iN2QzLTQzZjc1YjEwODcxZSIsInVzZXJuYW1lIjoiZGV2cGVkcm9nYWJyaWVsQGdtYWlsLmNvbSIsIm5hbWUiOiJQZWRybyBHYWJyaWVsIiwiZW1haWwiOiJkZXZwZWRyb2dhYnJpZWxAZ21haWwuY29tIiwiaWF0IjoxNTg1NTMwMDY1LCJleHAiOjE1ODYxMzQ4NjV9.gqbPESCOp5QEFWz_VTvSgpmwqmBg_rSqMjHbPBpyVxA
 
-@baseUrl = http://localhost:3000
-
-# @name HealthyCheck
+@baseUrl = http://localhost:3002
 
 ###
 
-# @name createUser
+# @name createOrder
 POST {{baseUrl}} HTTP/1.1
 Content-Type: application/json
 

@@ -2,11 +2,12 @@ import axios from 'axios';
 
 /**
  * Sending SYNC comunication to
- * authentication microservice
+ * events microservice to verify
+ * availablety of tickets
  *
  * @todo
  * ON catch scope, send a alert
- * of out comunication with auth
+ * of out comunication with events
  * microservices, or make a numbers
  * of retries
  */

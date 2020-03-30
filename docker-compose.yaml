@@ -16,6 +16,7 @@ services:
         - DB_HOST=postgress-orders-microservice
         - DB_DIALECT=postgres
         - DB_PORT=5432
+        - CHECK_AUTH_TOKEN_URL=http://auth-microservice:3000/auth/check-token
       ports:
         - "3002:3002"
       depends_on:
