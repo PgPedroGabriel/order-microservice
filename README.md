@@ -4,11 +4,10 @@
 
 * List orders of a user
 * Using User Auth JWT microservice Sync comunication
-* Create a order of 1 event to N tickets
+* Create a order of N events to N tickets
 * Check ticket availablety with sync request to events microservice
-* Custom fallback of create order without ticket availablety
 * Search order by Id
-* Create Payment stack to RabitMQ to generate a payment comunication
+* Send Payment Contract to RabbitMQ to payment worker queue
 
 ### Checks
 
@@ -17,21 +16,30 @@
 
 ### Using docker
 
-1. To test:
-
-``` docker-compose -p tests run -p 3002 orders-microservice yarn test ```
-
-2. To build:
+1. To build:
 
 ``` docker-compose up --build -d ```
 
-3. Make sure that you can see all networks to comunicate with microservices, sample:
+2. Make sure that you can see all networks to comunicate with microservices, sample:
 
 ``` docker network ls ```
 
 ``` docker network connect authenticate-microservice_auth-microservice-network [AUTH_CONTAINER_ID] ```
 
 ``` docker network connect events-tickets-microservice_events-microservice-network [EVENT_CONTAINER_ID] ```
+
+3. Install RabbitMQ container and make sure that container is in order-network, sample:
+
+3.1 - install RabbitMQ container
+
+``` docker run -d --hostname my-rabbit --name some-rabbit -p 8080:15672 rabbitmq:3-management ```
+
+3.2 - Add rabbitmq container order network
+
+``` docker network ls ```
+
+``` docker network connect order-microservice_orders-microservice-network some-rabbit ```
+
 
 ### Using your local machine
 
@@ -60,8 +68,21 @@ Build your own docker image, remember to change .env vars
 ### Trick to vscode devolopment
 
 Install plugins
+
 1. ESLINT
 2. Prettier
-3. REST Client
+3. REST Client (to run requests inside vscode on requests file in root folder)
 4. Editorconfig
 5. Docker
+
+### Development pending tasks
+
+- [ ] Add client data to send to payment contract (queue)
+- [ ] Add Type of Payment (card/boleto/débito) data to send to payment contract (queue)
+- [ ] Add client Address to send to payment contract (queue)
+- [ ] Code coverge > 80%
+- [ ] Add Logging traces
+- [ ] Add ALARM when errors occur
+- [ ] Revison of production dockerfile builder
+- [ ] Create CI/CD pipelines with docker-compose to GCP Cloud Builder
+- [ ] Send pod to Kubernets Cluster
