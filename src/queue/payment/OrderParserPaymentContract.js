@@ -4,7 +4,7 @@ import PaymentProductContract from './PaymentProductContract';
 
 const parseTicketToProduct = orderTicket => {
   const product = new PaymentProductContract(
-    orderTicket.id,
+    orderTicket.external_id,
     orderTicket.name,
     orderTicket.unit_price,
     orderTicket.quantity
