@@ -15,39 +15,7 @@ class OrderController {
    */
   static async list(req, res) {
     const { id } = req.authUserInfo;
-    const orders = await Order.findAndCountAll({
-      where: {
-        external_user_id: id
-      },
-      attributes: [
-        'id',
-        'external_user_id',
-        'total_price',
-        'tickets_price',
-        'convenience_price',
-        'createdAt',
-        'updatedAt'
-      ],
-      include: [
-        {
-          model: OrderTicket,
-          as: 'order_tickets',
-          attributes: [
-            'id',
-            'name',
-            'unit_price',
-            'total_price',
-            'quantity',
-            'external_id'
-          ]
-        },
-        {
-          model: OrderEvent,
-          as: 'order_events',
-          attributes: ['id', 'name', 'convenience_tax', 'external_id']
-        }
-      ]
-    });
+    const orders = await OrdersRepository.findAll({ external_user_id: id });
 
     return res.json(orders);
   }

@@ -20,6 +20,7 @@ services:
         - GET_EVENTS_TICKETS_INFO_URL=http://events-microservice:3001/filter-events-tickets
         - RABBITMQ_HOST_URL=amqp://some-rabbit:5672
         - RABBITMQ_PAYMENT_QUEUE=order_process_payment
+        - RABBITMQ_EXCHANGE_PAYMENT_STATUS_CHANGED=payment_status_changed
       ports:
         - "3002:3002"
       depends_on:
