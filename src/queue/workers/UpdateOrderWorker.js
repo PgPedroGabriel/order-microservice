@@ -9,7 +9,6 @@ class UpdateOrderWorker extends RabbitMQ {
   }
 
   async subscribe() {
-    console.log(process.env.RABBITMQ_EXCHANGE_PAYMENT_STATUS_CHANGED);
     await this.channel.assertExchange(this.exchange, 'fanout', {
       durable: false
     });
@@ -26,12 +25,13 @@ class UpdateOrderWorker extends RabbitMQ {
     this.channel.consume(q.queue, msg => {
       if (msg && msg.content) {
         const json = JSON.parse(msg.content.toString());
-        console.log(
-          OrdersRepository.updatePaymentStatus(json.order_id, json.status)
-        );
+
+        console.log(`Updating order id ${json.order_id}`);
+
+        OrdersRepository.updatePaymentStatus(json.order_id, json.status);
       }
 
-      // this.channel.ack(msg); // remove from queue
+      this.channel.ack(msg); // remove from queue
     });
   }
 }
