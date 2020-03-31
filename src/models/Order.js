@@ -3,8 +3,6 @@
 import Sequelize, { Model } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import 'dotenv';
-import OrderEvent from './OrderEvent';
-import OrderTicket from './OrderTicket';
 
 class Order extends Model {
   static init(connection) {

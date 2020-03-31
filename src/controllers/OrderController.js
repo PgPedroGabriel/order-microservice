@@ -6,7 +6,7 @@ import OrderEvent from '../models/OrderEvent';
 import OrderTicket from '../models/OrderTicket';
 import AvailabletyCheck from '../helpers/AvailabletyCheck';
 import TicketQuantityObjectMapper from '../helpers/TicketQuantityObjectMapper';
-import PaymentQueue from '../services/payment/PaymentQueue';
+import PaymentQueue from '../queue/payment/PaymentQueue';
 import OrdersRepository from '../repositories/Orders';
 
 class OrderController {
