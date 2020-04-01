@@ -8,6 +8,8 @@
 * Check ticket availablety with sync request to events microservice
 * Search order by Id
 * Send Payment Contract to RabbitMQ to payment worker queue
+* (Sentry to trace error logs)[https://sentry.io/]
+* Morgan to trace requests
 
 ### Checks
 
@@ -24,9 +26,9 @@
 
 ``` docker network ls ```
 
-``` docker network connect authenticate-microservice_auth-microservice-network [AUTH_CONTAINER_ID] ```
+``` docker network connect authenticate-microservice_auth-microservice-network orders-microservice ```
 
-``` docker network connect events-tickets-microservice_events-microservice-network [EVENT_CONTAINER_ID] ```
+``` docker network connect events-tickets-microservice_events-microservice-network orders-microservice ```
 
 3. Install RabbitMQ container and make sure that container is in order-network, sample:
 
@@ -81,8 +83,8 @@ Install plugins
 - [ ] Add Type of Payment (card/boleto/débito) data to send to payment contract (queue)
 - [ ] Add client Address to send to payment contract (queue)
 - [ ] Code coverge > 80%
-- [ ] Add Logging traces
-- [ ] Add ALARM when errors occur
+- [x] Add Logging traces
+- [x] Add ALARM when errors occur
 - [ ] Revison of production dockerfile builder
 - [ ] Create CI/CD pipelines with docker-compose to GCP Cloud Builder
 - [ ] Send pod to Kubernets Cluster

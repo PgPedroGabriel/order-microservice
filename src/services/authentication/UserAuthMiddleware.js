@@ -3,12 +3,6 @@ import axios from 'axios';
 /**
  * Sending SYNC comunication to
  * authentication microservice
- *
- * @todo
- * ON catch scope, send a alert
- * of out comunication with auth
- * microservices, or make a numbers
- * of retries
  */
 export default async (req, res, next) => {
   const { authorization } = req.headers;
@@ -32,10 +26,6 @@ export default async (req, res, next) => {
       return res.status(401).send();
     }
 
-    /**
-     * @todo
-     * Send a alert o retry N times
-     */
-    return res.status(401).send();
+    return next(err);
   }
 };

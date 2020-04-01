@@ -4,12 +4,6 @@ import EventsTicketsInfoParser from './EventsTicketsInfoParser';
 /**
  * Sending SYNC comunication to
  * events microservice
- *
- * @todo
- * ON catch scope, send a alert
- * of out comunication with events
- * microservices, or make a numbers
- * of retries
  */
 export default async (req, res, next) => {
   try {
@@ -33,10 +27,6 @@ export default async (req, res, next) => {
       return res.status(401).send();
     }
 
-    /**
-     * @todo
-     * Send a alert
-     */
-    return res.status(500).send();
+    return next(err);
   }
 };

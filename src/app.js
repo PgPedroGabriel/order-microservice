@@ -3,12 +3,19 @@ import cors from 'cors';
 import routes from './routes';
 import './database';
 
+import morgan from './configs/morgan';
+import Sentry from './configs/sentry';
+
 class App {
   constructor() {
     this.server = express();
 
+    this.watchRequestsHandler();
+
     this.middlewares();
     this.routes();
+
+    this.watchErrorsHandler();
   }
 
   middlewares() {
@@ -18,6 +25,14 @@ class App {
 
   routes() {
     this.server.use(routes);
+  }
+
+  watchRequestsHandler() {
+    this.server.use(morgan);
+  }
+
+  watchErrorsHandler() {
+    this.server.use(Sentry.Handlers.errorHandler());
   }
 }
 

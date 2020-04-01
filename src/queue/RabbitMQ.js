@@ -7,29 +7,13 @@ class RabbitMQ {
   }
 
   async connectQueue() {
-    try {
-      this.connection = await amqp.connect(process.env.RABBITMQ_HOST_URL);
-      this.channel = await this.connection.createChannel();
-    } catch (e) {
-      /**
-       * @todo
-       * send a alert
-       */
-      console.error(e);
-    }
+    this.connection = await amqp.connect(process.env.RABBITMQ_HOST_URL);
+    this.channel = await this.connection.createChannel();
   }
 
   async closeConnection() {
-    try {
-      await this.channel.close();
-      await this.connection.close();
-    } catch (e) {
-      /**
-       * @todo
-       * send a alert
-       */
-      console.error(e);
-    }
+    await this.channel.close();
+    await this.connection.close();
   }
 }
 

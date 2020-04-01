@@ -8,25 +8,17 @@ class PaymentQueue extends RabbitMQ {
   }
 
   async sendMessage() {
-    try {
-      const queueName = process.env.RABBITMQ_PAYMENT_QUEUE;
+    const queueName = process.env.RABBITMQ_PAYMENT_QUEUE;
 
-      await this.channel.assertQueue(queueName, {
-        durable: true
-      });
-      await this.channel.sendToQueue(
-        queueName,
-        Buffer.from(JSON.stringify(OrderParserPaymentContract(this.order)), {
-          persistent: true
-        })
-      );
-    } catch (e) {
-      /**
-       * @todo
-       * send a alert
-       */
-      console.error(e);
-    }
+    await this.channel.assertQueue(queueName, {
+      durable: true
+    });
+    await this.channel.sendToQueue(
+      queueName,
+      Buffer.from(JSON.stringify(OrderParserPaymentContract(this.order)), {
+        persistent: true
+      })
+    );
   }
 }
 

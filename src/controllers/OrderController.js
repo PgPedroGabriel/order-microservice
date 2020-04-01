@@ -4,7 +4,7 @@ import Database from '../database/index';
 import Order from '../models/Order';
 import OrderEvent from '../models/OrderEvent';
 import OrderTicket from '../models/OrderTicket';
-import AvailabletyCheck from '../helpers/AvailabletyCheck';
+import { checkStock, TicketStockError } from '../helpers/AvailabletyCheck';
 import TicketQuantityObjectMapper from '../helpers/TicketQuantityObjectMapper';
 import PaymentQueue from '../queue/payment/PaymentQueue';
 import OrdersRepository from '../repositories/Orders';
@@ -23,7 +23,7 @@ class OrderController {
   /**
    * Create Order
    */
-  static async create(req, res) {
+  static async create(req, res, next) {
     const { externalEventsData } = req;
     const { body } = req;
 
@@ -54,7 +54,7 @@ class OrderController {
             transaction
           );
 
-          AvailabletyCheck(orderTicket, externalTicketData);
+          checkStock(orderTicket, externalTicketData);
 
           order.calcTaxes(orderEvent, orderTicket);
         }
@@ -75,15 +75,14 @@ class OrderController {
       await queue.closeConnection();
 
       return res.json(orderFullData);
-    } catch (e) {
-      /**
-       * @todo
-       * Send a alert with error
-       */
-      console.error(e);
+    } catch (err) {
+      await transaction.rollback();
 
-      transaction.rollback();
-      return res.status(400).json(e.message);
+      if (err instanceof TicketStockError) {
+        return res.status(400).json(err.message);
+      }
+
+      return next(err);
     }
   }
 }
